@@ -185,7 +185,8 @@ const delete_month =async(req,res)=>{
     if(!data){res.status(404).send("هذا الشهر غير موجود")}
      await Month.findByIdAndDelete(month_id);
     res.status(200).send(' تم حذف هذا الشهر بنجاح')
-}catch(e){res.status(500).send(e.message)}
+}else{return res.status(404).send('لست ادمن')}
+    }catch(e){res.status(500).send(e.message)}
 }
 
 module.exports={create_month ,create_day ,audience_for_players ,getAttendees,audience_for_coachs,delete_month}
