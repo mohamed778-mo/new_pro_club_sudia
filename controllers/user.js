@@ -130,8 +130,8 @@ const create_coach = async(req,res)=>{
         }
 }
 
-
-          const hashedPassword = await bcryptjs.hash(password, 10);
+          const password_writen = req.body.password
+          const hashedPassword = await bcryptjs.hash(password_writen, 10);
 const file = req.files.find(f => f.fieldname === 'file')
 
 if(file){
@@ -180,7 +180,7 @@ if(file){
            
               newCoach.save()
               console.log(newCoach)
-                 res.status(200).send(newCoach)
+                 res.status(200).send(newCoach,`${password_writen}كلمة المرور : `)
                   } catch (err) {
                     reject(err);
                   }
@@ -206,7 +206,7 @@ if(file){
               });
               await  newCoach.save() 
 
-                res.status(200).send(newCoach)
+                res.status(200).send(newCoach,`${password_writen} كلمه المرور: `)
           
           }
 
@@ -541,18 +541,19 @@ const editCoach = async (req, res) => {
         return res.status(404).send("not found !!");
       }
       
-      const {name  ,mobile  ,nationality  ,card_Number}= req.body
-    
+      const {name  ,mobile ,email ,nationality  ,card_Number}= req.body
+   
+            const new_password = req.body.password
+            const hashedPassword = await bcryptjs.hash(new_password, 10);
+            
         const updateData = {
-            name ,mobile  ,nationality  ,card_Number
+            name ,mobile  ,nationality  ,card_Number ,email
         };
       
-    const file = req.files.find(f => f.fieldname === 'file')
-       
-    if(file){
+         const file = req.files.find(f => f.fieldname === 'file')
          
-              
-      
+    
+
             if (!file) {
               return res.status(400).send('No file uploaded.');
             }
@@ -584,13 +585,16 @@ const editCoach = async (req, res) => {
                   const publicUrl = `https://storage.googleapis.com/${bucket.name}/${blob.name}`;
                   fs.unlinkSync(file.path);
                 
-                  updateData.picture = publicUrl;
+                    updateData.picture = publicUrl;
+                   
+                    updateData.password = hashedPassword;
+                    
                   const updatedQuestion = await Coach.findByIdAndUpdate(coach_id, updateData, { new: true });
                   console.log(updatedQuestion)
                   if (!updatedQuestion) {
                     return res.status(404).send("هذا اللاعب غير موجود");
                   }
-               res.status(200).send(" تم تعديل بيانات اللاعب بنجاح");
+               res.status(200).send(" تم تعديل بيانات اللاعب بنجاح", `${new_password}كلمه المرور الجديده : ` );
                   
                 } catch (err) {
                   reject(err);
@@ -603,14 +607,15 @@ const editCoach = async (req, res) => {
            
           }
    if(!file){
-    updateData.picture = 'empty'
+    updateData.picture = 'empty';
+    updateData.password = hashedPassword;
     const updatedQuestion = await Coach.findByIdAndUpdate(coach_id, updateData, { new: true });
    
     
         if (!updatedQuestion) {
           return res.status(404).send("هذا اللاعب غير موجود");
         }
-     res.status(200).send(" تم تعديل بيانات اللاعب بنجاح");
+     res.status(200).send(" تم تعديل بيانات اللاعب بنجاح",`${new_password}كلمه المرور الجديده :  `);
   }
 }else{res.status(400).send("لست ادمن")}
       } catch (e) {
