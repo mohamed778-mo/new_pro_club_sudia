@@ -207,7 +207,7 @@ console.log(hashedPassword)
               console.log(newCoach)
                 console.log(`${password_writen}`)
                 res.status(200).send({
-        newCoach,
+       data: newCoach,
         plaintextPassword: password_writen
     });
                   } catch (err) {
@@ -239,7 +239,7 @@ console.log(hashedPassword)
               await  newCoach.save() 
 console.log(`${password_writen}`)
                res.status(200).send({
-        newCoach,
+      data:  newCoach,
         plaintextPassword: password_writen
     });
             
