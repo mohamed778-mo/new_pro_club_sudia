@@ -663,9 +663,14 @@ if(file){
           return res.status(404).send("هذا اللاعب غير موجود");
         }
      res.status(200).json(' تم تعديل بيانات اللاعب بنجاح ' + new_password );
-  
+
+   }
 }else{res.status(400).send("لست ادمن")}
-      } catch (e) {
+       
+       
+     
+    
+    }catch (e) {
         res.status(500).send('يوجد خطأ فى السيرفر ');
       }
     
