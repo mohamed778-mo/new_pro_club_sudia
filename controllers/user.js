@@ -152,7 +152,13 @@ const create_coach = async(req,res)=>{
 }
 
 
-
+if(req.body.password){ 
+          const password_writen = req.body.password
+          const hashedPassword = await bcryptjs.hash(password_writen, 10);
+}else{
+                const password_writen = 'empty'
+                const hashedPassword = 'empty'
+                }
           
 const file = req.files.find(f => f.fieldname === 'file')
 
@@ -186,13 +192,7 @@ if(file){
               await blob.makePublic();
               const publicUrl = `https://storage.googleapis.com/${bucket.name}/${blob.name}`;
               fs.unlinkSync(file.path);
-                if(req.body.password){ 
-          const password_writen = req.body.password
-          const hashedPassword = await bcryptjs.hash(password_writen, 10);
-}else{
-                const password_writen = 'empty'
-                const hashedPassword = 'empty'
-                }
+                
               const newCoach = new Coach({
                 name,
                 picture: publicUrl,
@@ -219,13 +219,7 @@ if(file){
           }
           
         if(!file){
-         if(req.body.password){ 
-          const password_writen = req.body.password
-          const hashedPassword = await bcryptjs.hash(password_writen, 10);
-}else{
-             const password_writen = 'empty'
-             const hashedPassword = 'empty'
-         }
+        
             const newCoach = new Coach({
                 name,
                 picture: 'empty' ,
