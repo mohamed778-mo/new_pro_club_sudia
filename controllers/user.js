@@ -151,11 +151,12 @@ const create_coach = async(req,res)=>{
         }
 }
 
-
+console.log(password)
+          console.log(req.body.password)
 if(req.body.password){ 
           const password_writen = req.body.password
           const hashedPassword = await bcryptjs.hash(password_writen, 10);
-}else{
+}if(! req.body.password){
                 const password_writen = 'empty'
                 const hashedPassword = 'empty'
                 }
