@@ -32,12 +32,7 @@ const create_mainadmin = async(req,res)=>{
 const create_player = async(req,res)=>{
     try {
         const {name ,coach ,mobile ,dateOfBirth ,nationality ,category ,card_Number}= req.body
-        if(req.body.mobile){
-        const existingPlayer= await Player.findOne({ mobile });
-        if (existingPlayer) {
-          return res.status(400).send("Mobile number already exists");
-        }
-      }
+      
         const file = req.files.find(f => f.fieldname === 'file')
 
         if(file){
@@ -134,12 +129,7 @@ const create_coach = async(req,res)=>{
           return res.status(400).send("Email already exist!!");
         }
 }
-if(req.body.mobile){
-const existingCoach = await Coach.findOne({ mobile });
-    if (existingCoach) {
-      return res.status(400).send("Mobile number already exists");
-    }
-  }
+
 
           const hashedPassword = await bcryptjs.hash(password, 10);
 const file = req.files.find(f => f.fieldname === 'file')
