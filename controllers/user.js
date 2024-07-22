@@ -542,7 +542,7 @@ const login = async (req, res) => {
            
           }
    if(!file){
-    updateData.picture = 'empty'
+   
     const updatedQuestion = await Player.findByIdAndUpdate(player_id, updateData, { new: true });
     
         if (!updatedQuestion) {
