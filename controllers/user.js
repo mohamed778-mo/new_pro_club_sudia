@@ -120,7 +120,7 @@ const create_coach = async(req,res)=>{
       const user = req.user
       console.log(user.Admin)
       if(user.Admin){
-        const {name ,email,password ,mobile,dateOfBirth ,nationality ,category ,card_Number}= req.body
+        const {name ,email,password ,mobile ,nationality ,card_Number}= req.body
        
         
        if(req.body.email ){
@@ -173,10 +173,8 @@ if(file){
                 role: 'coach',
                 mobile,
                 email,
-                password:hashedPassword,
-                dateOfBirth,
+                password:hashedPassword,  
                 nationality,
-                category,
                 card_Number
               });
            
@@ -203,10 +201,8 @@ if(file){
                 mobile,
                 email,
                 password:hashedPassword
-                ,dateOfBirth 
                 ,nationality
-                 ,category 
-                 ,card_Number
+                ,card_Number
               });
               await  newCoach.save() 
 
@@ -545,10 +541,10 @@ const editCoach = async (req, res) => {
         return res.status(404).send("not found !!");
       }
       
-      const {name  ,mobile ,dateOfBirth ,nationality ,category ,card_Number}= req.body
+      const {name  ,mobile  ,nationality  ,card_Number}= req.body
     
         const updateData = {
-            name ,mobile ,dateOfBirth ,nationality ,category ,card_Number
+            name ,mobile  ,nationality  ,card_Number
         };
       
     const file = req.files.find(f => f.fieldname === 'file')
