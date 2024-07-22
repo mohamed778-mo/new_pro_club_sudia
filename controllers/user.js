@@ -160,10 +160,8 @@ const file = req.files.find(f => f.fieldname === 'file')
 
 if(file){
              const password_writen = req.body.password
-          const hashedPassword = await bcryptjs.hash(password_writen, 10);
-console.log(password_writen)
-console.log(hashedPassword)
 
+ const hashedPassword = await bcryptjs.hash(password_writen, 10);
          if (!admin.apps.length) {
           admin.initializeApp({
             credential: admin.credential.cert(serviceAccount),
@@ -200,7 +198,8 @@ console.log(hashedPassword)
                 email,
                 password:hashedPassword,  
                 nationality,
-                card_Number
+                card_Number,
+                text_password:`${password_writen}`
               });
            
               newCoach.save()
@@ -208,7 +207,7 @@ console.log(hashedPassword)
                 console.log(`${password_writen}`)
                 res.status(200).send({
        data: newCoach,
-        plaintextPassword: password_writen
+        
     });
                   } catch (err) {
                     reject(err);
@@ -224,8 +223,7 @@ console.log(hashedPassword)
         if(!file){
                      const password_writen = req.body.password
                      const hashedPassword = await bcryptjs.hash(password_writen, 10);
-console.log(password_writen)
-console.log(hashedPassword)
+
             const newCoach = new Coach({
                 name,
                 picture: 'empty' ,
@@ -234,13 +232,14 @@ console.log(hashedPassword)
                 email,
                 password:hashedPassword
                 ,nationality
-                ,card_Number
+                ,card_Number,
+                text_password:`${password_writen}`
               });
               await  newCoach.save() 
-console.log(`${password_writen}`)
+
                res.status(200).send({
       data:  newCoach,
-        plaintextPassword: password_writen
+       
     });
             
           }
@@ -284,7 +283,8 @@ const login = async (req, res) => {
 
     res.status(200).send({
       access_token: `Bearer ${token}`,
-      success: userType === 'admin' ? "تم التسجيل بنجاح, مرحبا ادمن" : "تم التسجيل بنجاح, مرحبا كابتن"
+      success: userType === 'admin' ? "تم التسجيل بنجاح, مرحبا ادمن" : "تم التسجيل بنجاح, مرحبا كابتن",
+        Admin:user.Admin
     });
   } catch (error) {
     res.status(500).send("Server Error");
@@ -372,8 +372,12 @@ const login = async (req, res) => {
       if (!data) {
         return res.status(404).send(" id not exist ! ");
       }
+          const text_password = data.text_password
   
-      res.status(200).send(data);
+           res.status(200).send({
+      data:  data,
+        plaintextPassword: text_password
+    });
     }else{res.status(400).send("لست ادمن")}
     } catch (e) {
       res.status(500).send(e.message);
@@ -630,8 +634,8 @@ if(file){
              
                      const hashedPassword = await bcryptjs.hash(new_password, 10);
                       updateData.password = hashedPassword;
-          
-                     console.log(new_password)
+                     updateData.text_password = new_password;
+                  
                    console.log(hashedPassword)
                     
                   const updatedQuestion = await Coach.findByIdAndUpdate(coach_id, updateData, { new: true });
@@ -641,8 +645,7 @@ if(file){
                   }
               res.status(200).send({
         message: " تم تعديل بيانات اللاعب بنجاح "
-                  ,
-        updated_Password: new_password
+      
     });
                   
                 } catch (err) {
@@ -669,7 +672,7 @@ if(file){
                      const hashedPassword = await bcryptjs.hash(new_password, 10);
                       updateData.password = hashedPassword;
                   
-                     
+                     updateData.text_password = new_password;
                  
                    console.log(hashedPassword)
       
@@ -684,7 +687,7 @@ if(file){
      
 res.status(200).send({
         message: " تم تعديل بيانات اللاعب بنجاح ",
-        updated_Password: new_password
+       
     });
    }
 }else{res.status(400).send("لست ادمن")}
