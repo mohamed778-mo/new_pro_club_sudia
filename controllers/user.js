@@ -643,13 +643,14 @@ if(file){
           }
    if(!file){
          const new_email = req.body.email
+       console.log(new_email)
                     if(new_email){
                       updateData.email=  new_email
                     }
                     
                     const new_password = req.body.password
             
-            
+            console.log(new_password)
                      if(new_password){
                      const hashedPassword = await bcryptjs.hash(new_password, 10);
                       updateData.password = hashedPassword;
@@ -658,7 +659,7 @@ if(file){
                    console.log(hashedPassword)
     const updatedQuestion = await Coach.findByIdAndUpdate(coach_id, updateData, { new: true });
    
-    
+    console.log(updatedQuestion)
         if (!updatedQuestion) {
           return res.status(404).send("هذا اللاعب غير موجود");
         }
@@ -671,7 +672,7 @@ if(file){
      
     
     }catch (e) {
-        res.status(500).send('يوجد خطأ فى السيرفر ');
+        res.status(500).send(e.message);
       }
     
 }
