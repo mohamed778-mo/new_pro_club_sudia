@@ -20,7 +20,14 @@ const create_mainadmin = async(req,res)=>{
         if (dublicatedEmail) {
           return res.status(400).send("Email already exist!!");
         }
-       
+        if(req.body.mobile ){
+        const dublicatedMobile = await Main_Admin.findOne({ mobile: mobile });
+        if (dublicatedMobile) {
+          return res.status(400).send("Mobile already exist!!");
+        }
+}
+
+        
         const newUser = new Main_Admin({FirstName, LastName,email, mobile, password,role:'admin'})
         await newUser.save() 
     
@@ -34,6 +41,13 @@ const create_player = async(req,res)=>{
         const {name ,coach ,mobile ,dateOfBirth ,nationality ,category ,card_Number}= req.body
       
         const file = req.files.find(f => f.fieldname === 'file')
+        
+        if(req.body.mobile ){
+        const dublicatedMobile = await Player.findOne({ mobile: mobile });
+        if (dublicatedMobile) {
+          return res.status(400).send("Mobile already exist!!");
+        }
+}
 
         if(file){
         
@@ -129,6 +143,14 @@ const create_coach = async(req,res)=>{
           return res.status(400).send("Email already exist!!");
         }
 }
+
+                 if(req.body.mobile ){
+        const dublicatedMobile = await Coach.findOne({ mobile: mobile });
+        if (dublicatedMobile) {
+          return res.status(400).send("Mobile already exist!!");
+        }
+}
+
 
           const password_writen = req.body.password
           const hashedPassword = await bcryptjs.hash(password_writen, 10);
