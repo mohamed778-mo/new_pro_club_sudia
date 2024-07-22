@@ -170,4 +170,15 @@ const audience_for_coachs= async (req, res) => {
     }
 };
 
-module.exports={create_month ,create_day ,audience_for_players ,getAttendees,audience_for_coachs}
+
+
+const delete_month =async(req,res)=>{
+    try{
+    const month_id = req.params.month_id
+    const data= await Month.findByIdAndDelete(month_id)
+   if(!data){return res.status(404).send('هذا الشهر غير موجود')}
+    res.status(200).send('تم حذف هذا الشهر')
+}catch(e){res.status(500).send(e.message)}
+}
+
+module.exports={create_month ,create_day ,audience_for_players ,getAttendees,audience_for_coachs,delete_month}
