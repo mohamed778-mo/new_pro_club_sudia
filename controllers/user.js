@@ -206,7 +206,10 @@ console.log(hashedPassword)
               newCoach.save()
               console.log(newCoach)
                 console.log(`${password_writen}`)
-                 res.status(200).send(`${newCoach} + ${password_writen}  `)
+                res.status(200).send({
+        newCoach,
+        plaintextPassword: password_writen
+    });
                   } catch (err) {
                     reject(err);
                   }
@@ -235,7 +238,10 @@ console.log(hashedPassword)
               });
               await  newCoach.save() 
 console.log(`${password_writen}`)
-                res.status(200).send( `${newCoach} + ${password_writen}  `)
+               res.status(200).send({
+        newCoach,
+        plaintextPassword: password_writen
+    });
             
           }
 
@@ -380,12 +386,13 @@ const login = async (req, res) => {
       if (!mongoose.Types.ObjectId.isValid(coach_id)) {
         return res.status(404).send("ID is not correct!!");
       }
+         const data = await Coach.findById(coach_id)
       await Coach.findByIdAndUpdate(coach_id, { Admin: true }, { new: true }).then(
         (access) => {
           access.save();
         }
       );
-  
+   await data.save()
       res.status(200).send("تم تفعيل خاصيه الادمن لهذا المستخدم ");
     } catch (e) {
       res.status(500).send(e.message);
@@ -397,12 +404,13 @@ const login = async (req, res) => {
       if (!mongoose.Types.ObjectId.isValid(coach_id)) {
         return res.status(404).send("ID is not correct!!");
       }
+        const data = await Coach.findById(coach_id)
       await Coach.findByIdAndUpdate(coach_id, { Admin: false }, { new: true }).then(
-        (access) => {
-          access.save();
+        (unaccess) => {
+          unaccess.save();
         }
       );
-  
+  await data.save()
       res.status(200).send("تم تعطيل خاصيه الادمن لهذا المستخدم ");
     } catch (e) {
       res.status(500).send(e.message);
@@ -631,7 +639,10 @@ if(file){
                   if (!updatedQuestion) {
                     return res.status(404).send("هذا اللاعب غير موجود");
                   }
-               res.status(200).json(` "تم تعديل بيانات اللاعب بنجاح "+ ${new_password}` );
+              res.status(200).send({
+        " تم تعديل بيانات اللاعب بنجاح ",
+        updated_Password: new_password
+    });
                   
                 } catch (err) {
                   reject(err);
@@ -669,8 +680,11 @@ if(file){
         if (!updatedQuestion) {
           return res.status(404).send("هذا اللاعب غير موجود");
         }
-     res.status(200).json(`" تم تعديل بيانات اللاعب بنجاح "  + ${new_password}` );
-
+     
+res.status(200).send({
+        " تم تعديل بيانات اللاعب بنجاح ",
+        updated_Password: new_password
+    });
    }
 }else{res.status(400).send("لست ادمن")}
        
