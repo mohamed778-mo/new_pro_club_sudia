@@ -615,8 +615,8 @@ const editCoach = async (req, res) => {
         if (!updatedQuestion) {
           return res.status(404).send("هذا اللاعب غير موجود");
         }
-     res.status(200).send(" تم تعديل بيانات اللاعب بنجاح",`${new_password}كلمه المرور الجديده :  `);
-  }
+     res.status(200).send(" تم تعديل بيانات اللاعب بنجاح" , `${new_password}كلمه المرور الجديده :  ` );
+  
 }else{res.status(400).send("لست ادمن")}
       } catch (e) {
         res.status(500).send('يوجد خطأ فى السيرفر ');
