@@ -610,20 +610,21 @@ if(file){
                   fs.unlinkSync(file.path);
                 
                     updateData.picture = publicUrl;
+                    
                     const new_email = req.body.email
-                    if(new_email){
+                   
                       updateData.email=  new_email
-                    }
+                
                     
                     const new_password = req.body.password
             
-            
-                     if(new_password){
+             
                      const hashedPassword = await bcryptjs.hash(new_password, 10);
                       updateData.password = hashedPassword;
-                    }
+          
                      console.log(new_password)
                    console.log(hashedPassword)
+                    
                   const updatedQuestion = await Coach.findByIdAndUpdate(coach_id, updateData, { new: true });
                   console.log(updatedQuestion)
                   if (!updatedQuestion) {
