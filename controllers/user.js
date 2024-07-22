@@ -205,7 +205,7 @@ console.log(hashedPassword)
            
               newCoach.save()
               console.log(newCoach)
-                 res.status(200).json(`${newCoach} , ${password_writen}`)
+                 res.status(200).json(newCoach + password_writen)
                   } catch (err) {
                     reject(err);
                   }
@@ -234,7 +234,7 @@ console.log(hashedPassword)
               });
               await  newCoach.save() 
 
-                res.status(200).json(`${newCoach} , ${password_writen}`)
+                res.status(200).json( newCoach + password_writen)
             
           }
 
@@ -571,9 +571,7 @@ const editCoach = async (req, res) => {
       
       const {name  ,mobile  ,nationality  ,card_Number}= req.body
    
-            const new_password = req.body.password
-            const hashedPassword = await bcryptjs.hash(new_password, 10);
-            const new_email = req.body.email
+            
         const updateData = {
             name ,mobile  ,nationality  ,card_Number 
         };
@@ -581,10 +579,8 @@ const editCoach = async (req, res) => {
          const file = req.files.find(f => f.fieldname === 'file')
          
     
-
-            if (!file) {
-              return res.status(400).send('No file uploaded.');
-            }
+if(file){
+           
           
             if (!admin.apps.length) {
               admin.initializeApp({
@@ -614,20 +610,26 @@ const editCoach = async (req, res) => {
                   fs.unlinkSync(file.path);
                 
                     updateData.picture = publicUrl;
-                    
-                    if(req.body.email){
+                    const new_email = req.body.email
+                    if(new_email){
                       updateData.email=  new_email
                     }
-                     if(req.body.password){
+                    
+                    const new_password = req.body.password
+            
+            
+                     if(new_password){
+                     const hashedPassword = await bcryptjs.hash(new_password, 10);
                       updateData.password = hashedPassword;
                     }
-                   
+                     console.log(new_password)
+                   console.log(hashedPassword)
                   const updatedQuestion = await Coach.findByIdAndUpdate(coach_id, updateData, { new: true });
                   console.log(updatedQuestion)
                   if (!updatedQuestion) {
                     return res.status(404).send("هذا اللاعب غير موجود");
                   }
-               res.status(200).json(` تم تعديل بيانات اللاعب بنجاح , ${new_password} `);
+               res.status(200).json(' تم تعديل بيانات اللاعب بنجاح '+ new_password );
                   
                 } catch (err) {
                   reject(err);
@@ -640,19 +642,27 @@ const editCoach = async (req, res) => {
            
           }
    if(!file){
-        if(req.body.email){
-          updateData.email=  new_email
-     }
-    if(req.body.password){
-    updateData.password = hashedPassword;
-    }
+         const new_email = req.body.email
+                    if(new_email){
+                      updateData.email=  new_email
+                    }
+                    
+                    const new_password = req.body.password
+            
+            
+                     if(new_password){
+                     const hashedPassword = await bcryptjs.hash(new_password, 10);
+                      updateData.password = hashedPassword;
+                    }
+                     console.log(new_password)
+                   console.log(hashedPassword)
     const updatedQuestion = await Coach.findByIdAndUpdate(coach_id, updateData, { new: true });
    
     
         if (!updatedQuestion) {
           return res.status(404).send("هذا اللاعب غير موجود");
         }
-     res.status(200).json(` تم تعديل بيانات اللاعب بنجاح , ${new_password} `);
+     res.status(200).json(' تم تعديل بيانات اللاعب بنجاح ' + new_password );
   
 }else{res.status(400).send("لست ادمن")}
       } catch (e) {
