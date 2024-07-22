@@ -15,15 +15,8 @@ var Coach = new mongoose.Schema({
     mobile:{
         type:String,
     },
-    dateOfBirth:{
-        type:String,
-        required:true,
-    },
+   
     nationality:{
-        type:String,
-        required:true,
-    },
-    category:{
         type:String,
         required:true,
     },
@@ -60,8 +53,8 @@ var Coach = new mongoose.Schema({
             if(!StrongPassword.test(value)){
               throw new Error(" Password must contain ' ^(?=.*[a-z])(?=.*[0-9]) ' ")
             }
-          },
-          required:true,
+          }
+          
     },
     tokens:[
         {
