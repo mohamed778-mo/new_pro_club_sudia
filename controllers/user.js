@@ -202,7 +202,7 @@ if(file){
            
               newCoach.save()
               console.log(newCoach)
-                 res.status(200).send(newCoach,`${password_writen}كلمة المرور : `)
+                 res.status(200).send(newCoach , password_writen)
                   } catch (err) {
                     reject(err);
                   }
@@ -228,8 +228,8 @@ if(file){
               });
               await  newCoach.save() 
 
-                res.status(200).send(newCoach,`${password_writen} كلمه المرور: `)
-          
+                res.status(200).send(newCoach , password_writen)
+            
           }
 
 
@@ -616,7 +616,7 @@ const editCoach = async (req, res) => {
                   if (!updatedQuestion) {
                     return res.status(404).send("هذا اللاعب غير موجود");
                   }
-               res.status(200).send(" تم تعديل بيانات اللاعب بنجاح", `${new_password}كلمه المرور الجديده : ` );
+               res.status(200).send(" تم تعديل بيانات اللاعب بنجاح" , new_password );
                   
                 } catch (err) {
                   reject(err);
@@ -637,7 +637,7 @@ const editCoach = async (req, res) => {
         if (!updatedQuestion) {
           return res.status(404).send("هذا اللاعب غير موجود");
         }
-     res.status(200).send(" تم تعديل بيانات اللاعب بنجاح" , `${new_password}كلمه المرور الجديده :  ` );
+     res.status(200).send(" تم تعديل بيانات اللاعب بنجاح", new_password );
   
 }else{res.status(400).send("لست ادمن")}
       } catch (e) {
