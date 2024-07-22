@@ -140,6 +140,8 @@ const existingCoach = await Coach.findOne({ mobile });
       return res.status(400).send("Mobile number already exists");
     }
   }
+
+          const hashedPassword = await bcryptjs.hash(password, 10);
 const file = req.files.find(f => f.fieldname === 'file')
 
 if(file){
@@ -181,7 +183,7 @@ if(file){
                 role: 'coach',
                 mobile,
                 email,
-                password,
+                password:hashedPassword,
                 dateOfBirth,
                 nationality,
                 category,
@@ -210,7 +212,7 @@ if(file){
                 role:'coach',
                 mobile,
                 email,
-                password
+                password:hashedPassword
                 ,dateOfBirth 
                 ,nationality
                  ,category 
