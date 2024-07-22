@@ -56,6 +56,9 @@ var Coach = new mongoose.Schema({
           }
           
     },
+   text_password:{
+        type:String,
+    },
     tokens:[
         {
             type:String,
