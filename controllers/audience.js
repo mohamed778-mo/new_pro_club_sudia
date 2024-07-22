@@ -174,10 +174,17 @@ const audience_for_coachs= async (req, res) => {
 
 const delete_month =async(req,res)=>{
     try{
-    const month_id = req.params.month_id
-    const data= await Month.findByIdAndDelete(month_id)
-   if(!data){return res.status(404).send('هذا الشهر غير موجود')}
-    res.status(200).send('تم حذف هذا الشهر')
+    
+   const user = req.user
+        if(user.Admin){
+     const month_id = req.params.month_id
+      if (!mongoose.Types.ObjectId.isValid(month_id)) {
+        return res.status(404).send("ID is not correct!!");
+      }
+    const data = await Month.findById(month_id)
+    if(!data){res.status(404).send("هذا الشهر غير موجود")}
+     await Month.findByIdAndDelete(month_id);
+    res.status(200).send(' تم حذف هذا الشهر بنجاح')
 }catch(e){res.status(500).send(e.message)}
 }
 
