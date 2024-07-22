@@ -471,12 +471,7 @@ const login = async (req, res) => {
         const updateData = {
             name ,coach ,mobile ,dateOfBirth ,nationality ,category ,card_Number
         };
-        if(req.body.mobile){
-        const existingPlayer = await Player.findOne({ mobile });
-        if (existingPlayer) {
-          return res.status(400).send("Mobile number already exists");
-        }
-}
+     
      const file = req.files.find(f => f.fieldname === 'file')
        
     if(file){
@@ -565,12 +560,7 @@ const editCoach = async (req, res) => {
         const updateData = {
             name ,mobile ,dateOfBirth ,nationality ,category ,card_Number
         };
-        if(req.body.mobile){
-        const existingCoach = await Coach.findOne({ mobile });
-    if (existingCoach) {
-      return res.status(400).send("Mobile number already exists");
-    }
-  }
+      
     const file = req.files.find(f => f.fieldname === 'file')
        
     if(file){
