@@ -189,4 +189,38 @@ const delete_month =async(req,res)=>{
     }catch(e){res.status(500).send(e.message)}
 }
 
-module.exports={create_month ,create_day ,audience_for_players ,getAttendees,audience_for_coachs,delete_month}
+const get_all_month =async(req,res)=>{
+    try{
+    
+   const user = req.user
+        if(user.Admin){
+
+     
+    const data = await Month.find()
+    if(!data){res.status(404).send("لا يوجد شهور")}
+    
+    res.status(200).send(data)
+}else{return res.status(404).send('لست ادمن')}
+    }catch(e){res.status(500).send(e.message)}
+}
+
+
+const get_month =async(req,res)=>{
+    try{
+    
+   const user = req.user
+        if(user.Admin){
+const month_id = req.params.month_id
+      if (!mongoose.Types.ObjectId.isValid(month_id)) {
+        return res.status(404).send("ID is not correct!!");
+      }
+    const data = await Month.findById(month_id)
+    if(!data){res.status(404).send("هذا الشهر غير موجود")}
+    
+    res.status(200).send(data)
+}else{return res.status(404).send('لست ادمن')}
+    }catch(e){res.status(500).send(e.message)}
+}
+
+
+module.exports={create_month ,create_day ,audience_for_players ,getAttendees,audience_for_coachs,delete_month,get_all_month,get_month}
