@@ -151,20 +151,18 @@ const create_coach = async(req,res)=>{
         }
 }
 
-console.log(password)
-          console.log(req.body.password)
-if(req.body.password){ 
-          const password_writen = req.body.password
-          const hashedPassword = await bcryptjs.hash(password_writen, 10);
-}if(! req.body.password){
-                const password_writen = 'empty'
-                const hashedPassword = 'empty'
-                }
+
+        
+
+
           
 const file = req.files.find(f => f.fieldname === 'file')
 
 if(file){
-    
+             const password_writen = req.body.password
+          const hashedPassword = await bcryptjs.hash(password_writen, 10);
+console.log(password_writen)
+console.log(hashedPassword)
 
          if (!admin.apps.length) {
           admin.initializeApp({
@@ -220,7 +218,10 @@ if(file){
           }
           
         if(!file){
-        
+                     const password_writen = req.body.password
+                     const hashedPassword = await bcryptjs.hash(password_writen, 10);
+console.log(password_writen)
+console.log(hashedPassword)
             const newCoach = new Coach({
                 name,
                 picture: 'empty' ,
