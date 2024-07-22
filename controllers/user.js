@@ -152,16 +152,13 @@ const create_coach = async(req,res)=>{
 }
 
 
-          const password_writen = req.body.password
-          const hashedPassword = await bcryptjs.hash(password_writen, 10);
+
+          
 const file = req.files.find(f => f.fieldname === 'file')
 
 if(file){
     
-      if (!file) {
-        return res.status(400).send('No file uploaded.');
-      }
-    
+
          if (!admin.apps.length) {
           admin.initializeApp({
             credential: admin.credential.cert(serviceAccount),
@@ -189,6 +186,13 @@ if(file){
               await blob.makePublic();
               const publicUrl = `https://storage.googleapis.com/${bucket.name}/${blob.name}`;
               fs.unlinkSync(file.path);
+                if(req.body.password){ 
+          const password_writen = req.body.password
+          const hashedPassword = await bcryptjs.hash(password_writen, 10);
+}else{
+                const password_writen = 'empty'
+                const hashedPassword = 'empty'
+                }
               const newCoach = new Coach({
                 name,
                 picture: publicUrl,
@@ -215,7 +219,13 @@ if(file){
           }
           
         if(!file){
-        
+         if(req.body.password){ 
+          const password_writen = req.body.password
+          const hashedPassword = await bcryptjs.hash(password_writen, 10);
+}else{
+             const password_writen = 'empty'
+             const hashedPassword = 'empty'
+         }
             const newCoach = new Coach({
                 name,
                 picture: 'empty' ,
@@ -563,13 +573,13 @@ const editCoach = async (req, res) => {
         return res.status(404).send("not found !!");
       }
       
-      const {name  ,mobile ,email ,nationality  ,card_Number}= req.body
+      const {name  ,mobile  ,nationality  ,card_Number}= req.body
    
             const new_password = req.body.password
             const hashedPassword = await bcryptjs.hash(new_password, 10);
-            
+            const new_email = req.body.email
         const updateData = {
-            name ,mobile  ,nationality  ,card_Number ,email
+            name ,mobile  ,nationality  ,card_Number 
         };
       
          const file = req.files.find(f => f.fieldname === 'file')
@@ -608,9 +618,14 @@ const editCoach = async (req, res) => {
                   fs.unlinkSync(file.path);
                 
                     updateData.picture = publicUrl;
-                   
-                    updateData.password = hashedPassword;
                     
+                    if(req.body.email){
+                      updateData.email=  new_email
+                    }
+                     if(req.body.password){
+                      updateData.password = hashedPassword;
+                    }
+                   
                   const updatedQuestion = await Coach.findByIdAndUpdate(coach_id, updateData, { new: true });
                   console.log(updatedQuestion)
                   if (!updatedQuestion) {
@@ -629,8 +644,12 @@ const editCoach = async (req, res) => {
            
           }
    if(!file){
-    updateData.picture = 'empty';
+        if(req.body.email){
+          updateData.email=  new_email
+     }
+    if(req.body.password){
     updateData.password = hashedPassword;
+    }
     const updatedQuestion = await Coach.findByIdAndUpdate(coach_id, updateData, { new: true });
    
     
