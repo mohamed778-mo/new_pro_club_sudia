@@ -36,15 +36,15 @@ const coach_auth = async (req, res, Next) => {
 
 const admin_auth = async (req, res, Next) => {
   try {
- if (!req?.cookies) {
+ // if (!req?.cookies) {
+ //      return res.status(404).send(" please login !");
+ //    }
+ //    const token = req?.cookies?.access_token?.split(" ")[1];
+    if (!req.headers) {
       return res.status(404).send(" please login !");
     }
-    const token = req?.cookies?.access_token?.split(" ")[1];
-    // if (!req.headers) {
-    //   return res.status(404).send(" please login !");
-    // }
-    // console.log(req.headers?.authorization);
-    // const token = req.headers.authorization.split(" ")[1];
+    console.log(req.headers?.authorization);
+    const token = req.headers.authorization.split(" ")[1];
     if (!token) {
       return res.status(401).send(" please login !");
     }
