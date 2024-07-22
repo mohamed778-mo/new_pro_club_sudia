@@ -640,7 +640,8 @@ if(file){
                     return res.status(404).send("هذا اللاعب غير موجود");
                   }
               res.status(200).send({
-        " تم تعديل بيانات اللاعب بنجاح ",
+        message: " تم تعديل بيانات اللاعب بنجاح "
+                  ,
         updated_Password: new_password
     });
                   
@@ -682,7 +683,7 @@ if(file){
         }
      
 res.status(200).send({
-        " تم تعديل بيانات اللاعب بنجاح ",
+        message: " تم تعديل بيانات اللاعب بنجاح ",
         updated_Password: new_password
     });
    }
