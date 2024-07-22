@@ -206,7 +206,7 @@ console.log(hashedPassword)
               newCoach.save()
               console.log(newCoach)
                 console.log(`${password_writen}`)
-                 res.status(200).send(newCoach + `${password_writen}`)
+                 res.status(200).send(`${newCoach} + ${password_writen}  `)
                   } catch (err) {
                     reject(err);
                   }
@@ -235,7 +235,7 @@ console.log(hashedPassword)
               });
               await  newCoach.save() 
 console.log(`${password_writen}`)
-                res.status(200).send( newCoach + `${password_writen}`)
+                res.status(200).send( `${newCoach} + ${password_writen}  `)
             
           }
 
@@ -631,7 +631,7 @@ if(file){
                   if (!updatedQuestion) {
                     return res.status(404).send("هذا اللاعب غير موجود");
                   }
-               res.status(200).json(' تم تعديل بيانات اللاعب بنجاح '+  `${new_password}` );
+               res.status(200).json(` "تم تعديل بيانات اللاعب بنجاح "+ ${new_password}` );
                   
                 } catch (err) {
                   reject(err);
@@ -669,7 +669,7 @@ if(file){
         if (!updatedQuestion) {
           return res.status(404).send("هذا اللاعب غير موجود");
         }
-     res.status(200).json(' تم تعديل بيانات اللاعب بنجاح ' + `${new_password}` );
+     res.status(200).json(`" تم تعديل بيانات اللاعب بنجاح "  + ${new_password}` );
 
    }
 }else{res.status(400).send("لست ادمن")}
