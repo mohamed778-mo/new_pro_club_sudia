@@ -4,7 +4,7 @@ const router = express.Router()
 const { admin_auth} = require('../middleware/auth')
   
 const {
-    create_month ,create_day ,audience_for_players ,audience_for_coachs,getAttendees
+    create_month ,create_day ,audience_for_players ,audience_for_coachs,getAttendees,delete_month
   } = require('../controllers/audience')
 
 
@@ -14,6 +14,6 @@ const {
   router.post("/admin/audience_for_coach/:month_id/:day_id",admin_auth,audience_for_coachs)
   router.get("/get_audience/:month_id/:day_id",admin_auth,getAttendees)
 
-
+ router.delete("/delete_month/:month_id",admin_auth,delete_month)
 
   module.exports = router;
