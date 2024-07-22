@@ -432,7 +432,7 @@ const login = async (req, res) => {
       if (!mongoose.Types.ObjectId.isValid(coach_id)) {
         return res.status(404).send("ID is not correct!!");
       }
-      const data = await Coach.findById(player_id)
+      const data = await Coach.findById(coach_id)
     if(!data){res.status(404).send("هذا المدرب غير موجود")}
      await Coach.findByIdAndDelete(coach_id);
       res.status(200).send(" Delete data is success ! ");
