@@ -52,9 +52,26 @@ const create_day = async (req, res) => {
         if (!Array.isArray(player_ids) || player_ids.length === 0) {
             return res.status(400).send("قائمة معرفات اللاعبين غير صالحة");
         }
+         const data_month = await Month.findById(month_id);
 
-         const check_audience = await Month.find({ 'days.audience_player': false });
-if(check_audience){
+
+    if (!data_month) {
+      return res.status(404).send('الشهر غير موجود');
+    }
+
+  
+    const day = data_month.days.find(day => day._id.toString() === day_id);
+
+
+    if (!day) {
+      return res.status(404).send('اليوم غير موجود في الشهر');
+    }
+
+  
+    const audienceStatus = day.audience_player || false;
+
+        
+if(audienceStatus){
 
         const playersData = await Promise.all(
             player_ids.map(async (player_id) => {
@@ -158,8 +175,25 @@ const audience_for_coachs= async (req, res) => {
             return res.status(400).send("قائمة معرفات اللاعبين غير صالحة");
         }
 
-         const check_audience = await Month.find({ 'days.audience_coach': false });
-if(check_audience){
+        const data_month = await Month.findById(month_id);
+
+
+    if (!data_month) {
+      return res.status(404).send('الشهر غير موجود');
+    }
+
+  
+    const day = data_month.days.find(day => day._id.toString() === day_id);
+
+
+    if (!day) {
+      return res.status(404).send('اليوم غير موجود في الشهر');
+    }
+
+  
+    const audienceStatus = day.audience_player || false;
+
+if(audienceStatus){
        
         const coachsData = await Promise.all(
             coach_ids.map(async (coach_id) => {
