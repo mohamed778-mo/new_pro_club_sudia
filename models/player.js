@@ -45,6 +45,19 @@ var Player = new mongoose.Schema({
    doc_end:{
         type:String,
     },
+
+  attendance: {
+        present: {
+            type: Number,
+            default: 0,
+        },
+        absent: {
+            type: Number,
+            default: 0,
+        },
+    }
+
+   
 });
 
 
