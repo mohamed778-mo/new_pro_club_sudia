@@ -260,14 +260,14 @@ const login = async (req, res) => {
     let userType = 'admin';
 
     if (!user) {
-     const  user_2 = await Coach.findOne({ email: email });
+      user = await Coach.findOne({ email: email });
       userType = 'coach';
-    
 
-    if (!user_2) {
-      return res.status(404).send("الايميل او الباسورد ليسوا صحيحين");
+      if (!user) {
+        return res.status(404).send("الايميل او الباسورد ليسوا صحيحين");
+      }
     }
-}
+
     const isPassword = await bcryptjs.compare(password, user.password);
     if (!isPassword) {
       return res.status(404).send("الايميل او الباسورد ليسوا صحيحين");
@@ -275,7 +275,7 @@ const login = async (req, res) => {
 
     const SECRETKEY = process.env.SECRETKEY;
     const token = jwt.sign({ id: user._id }, SECRETKEY);
-    const expiresIn = userType === 'admin' ? 60 * 60 * 24 * 1024 * 300 : 60 * 24 * 1024;
+    const expiresIn = userType === 'admin' ? 60 * 60 * 24 * 30 * 1000 : 60 * 24 * 1000; // 30 days for admin, 1 day for coach
     res.cookie("access_token", `Bearer ${token}`, {
       expires: new Date(Date.now() + expiresIn),
       httpOnly: true,
@@ -288,12 +288,13 @@ const login = async (req, res) => {
     res.status(200).send({
       access_token: `Bearer ${token}`,
       success: userType === 'admin' ? "تم التسجيل بنجاح, مرحبا ادمن" : "تم التسجيل بنجاح, مرحبا كابتن",
-        Admin:user.Admin
+      Admin: user.Admin
     });
   } catch (error) {
     res.status(500).send("Server Error");
   }
 };
+
 
   const getAllPlayer = async (req, res) => {
     try {
