@@ -251,4 +251,28 @@ const month_id = req.params.month_id
 }
 
 
-module.exports={create_month ,create_day ,audience_for_players ,getAttendees,audience_for_coachs,delete_month,get_all_month,get_month}
+
+const deleteDayById = async (req,res ) => {
+  try {
+      const month_id = req.params.month_id
+      const day_id = req.params.day_id;
+    const result = await Month.updateOne(
+      { _id: month_id },
+      { $pull: { days: { _id: day_id } } }
+    );
+
+    if (result.nModified > 0) {
+      res.status(200).send(`تم حذف اليوم ذو المعرف ${day_id} من الشهر ذو المعرف ${month_id}.`);
+    } else {
+     return res.status(404).send(`لم يتم العثور على اليوم ذو المعرف ${day_id} في الشهر ذو المعرف ${month_id}.`);
+    }
+  } catch (err) {
+    console.error('حدث خطأ:', err.message);
+  }
+};
+
+
+
+
+
+module.exports={create_month ,create_day ,audience_for_players ,getAttendees,audience_for_coachs,delete_month,get_all_month,get_month,deleteDayById}
