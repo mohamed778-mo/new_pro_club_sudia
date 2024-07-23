@@ -152,7 +152,7 @@ const audience_for_coachs= async (req, res) => {
     try {
         const month_id = req.params.month_id;
         const day_id = req.params.day_id;
-        const coach_ids = JSON.parse(req.body.coach_ids);  
+        const coach_ids = req.body.coach_ids;  
 
         if (!Array.isArray(coach_ids) || coach_ids.length === 0) {
             return res.status(400).send("قائمة معرفات اللاعبين غير صالحة");
