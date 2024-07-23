@@ -298,7 +298,7 @@ const deleteDayById = async (req,res ) => {
    
       res.status(200).send(`.تم حذف اليوم.`);
 
-    }
+    
   } catch (err) {
     console.error('حدث خطأ:', err.message);
   }
