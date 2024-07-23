@@ -53,7 +53,9 @@ const create_day = async (req, res) => {
             return res.status(400).send("قائمة معرفات اللاعبين غير صالحة");
         }
 
-        
+         const check_audience = await Month.find({ 'days.audience': false });
+if(check_audience){
+
         const playersData = await Promise.all(
             player_ids.map(async (player_id) => {
                 const player = await Player.findById(player_id);
@@ -85,6 +87,7 @@ const create_day = async (req, res) => {
         );
 
         res.status(200).send({ message: 'تم تسجيل الحضور بنجاح' });
+}else{ res.status(400).send({ message: 'تم تسجيل الحضور فى وقت سابق' });}
     } catch (e) {
         res.status(500).send(e.message);
     }
@@ -155,6 +158,8 @@ const audience_for_coachs= async (req, res) => {
             return res.status(400).send("قائمة معرفات اللاعبين غير صالحة");
         }
 
+         const check_audience = await Month.find({ 'days.audience': false });
+if(check_audience){
        
         const coachsData = await Promise.all(
             coach_ids.map(async (coach_id) => {
@@ -187,6 +192,7 @@ const audience_for_coachs= async (req, res) => {
         );
 
         res.status(200).send({ message: 'تم تسجيل الحضور بنجاح' });
+}else{ res.status(400).send({ message: 'تم تسجيل الحضور فى وقت سابق' }) }
     } catch (e) {
         res.status(500).send(e.message);
     }
