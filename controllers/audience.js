@@ -53,7 +53,7 @@ const create_day = async (req, res) => {
             return res.status(400).send("قائمة معرفات اللاعبين غير صالحة");
         }
 
-        // اجمع بيانات اللاعبين الذين حضروا
+        
         const playersData = await Promise.all(
             player_ids.map(async (player_id) => {
                 const player = await Player.findById(player_id);
@@ -68,7 +68,7 @@ const create_day = async (req, res) => {
             })
         );
 
-        // تحديث سجل الحضور في يوم معين
+      
         await Month.updateOne(
             {
                 _id: month_id,
@@ -96,7 +96,6 @@ const getAttendees = async (req, res) => {
     try {
         const user = req.user;
 
-        // Check if the user is an admin
         if (!user.Admin) {
             return res.status(400).send("لست ادمن");
         }
@@ -104,7 +103,7 @@ const getAttendees = async (req, res) => {
         const month_id = req.params.month_id;
         const day_id = req.params.day_id;
 
-        // Find the specific day within the specified month
+      
         const month = await Month.findOne(
             {
                 _id: month_id,
@@ -138,7 +137,7 @@ const getAttendees = async (req, res) => {
             number_of_attendees: numberOfAttendees,
             attendees_data: attendees,
             all_day_data: day,
-            attendance_percentage: attendancePercentage.toFixed(2) // Optional: rounding to 2 decimal places
+            attendance_percentage: attendancePercentage.toFixed(2)
         });
     } catch (e) {
         res.status(500).send(e.message);
