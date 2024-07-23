@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 var reports_playerSchema = new mongoose.Schema({
     player_id: {
-        type: String,
+       type: mongoose.Schema.Types.ObjectId,
         
     },
     name: {
