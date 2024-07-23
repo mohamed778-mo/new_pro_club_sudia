@@ -38,7 +38,7 @@ const create_mainadmin = async(req,res)=>{
 
 const create_player = async(req,res)=>{
     try {
-        const {name ,coach ,mobile ,dateOfBirth ,nationality ,category ,card_Number}= req.body
+        const {name ,coach ,mobile ,dateOfBirth ,nationality ,category ,card_Number,doc_start,doc_end}= req.body
       
         const file = req.files.find(f => f.fieldname === 'file')
         
@@ -91,6 +91,8 @@ const create_player = async(req,res)=>{
                       ,nationality
                        ,category 
                        ,card_Number
+                        ,doc_start,
+                        doc_end
                     })
                    
                     newPlayer.save()
@@ -117,7 +119,9 @@ const create_player = async(req,res)=>{
             ,dateOfBirth 
             ,nationality
              ,category 
-             ,card_Number
+             ,card_Number,
+            doc_start,
+            doc_end
           });
          await newPlayer.save();
 
@@ -493,10 +497,10 @@ const login = async (req, res) => {
         return res.status(404).send("not found !!");
       }
       
-      const {name ,coach ,mobile ,dateOfBirth ,nationality ,category ,card_Number}= req.body
+      const {name ,coach ,mobile ,dateOfBirth ,nationality ,category ,card_Number,doc_start,doc_end}= req.body
     
         const updateData = {
-            name ,coach ,mobile ,dateOfBirth ,nationality ,category ,card_Number
+            name ,coach ,mobile ,dateOfBirth ,nationality ,category ,card_Number,doc_start,doc_end
         };
      
      const file = req.files.find(f => f.fieldname === 'file')
