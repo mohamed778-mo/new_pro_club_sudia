@@ -2,6 +2,8 @@ const Player = require("../models/player")
 const Coach = require("../models/coach")
 const Main_Admin = require("../models/Main_Admin")
 const Month = require("../models/month")
+const reports_player=require("../models/reports_player")
+const reports_coach=require("../models/reports_coach")
 
 const  mongoose  = require('mongoose')
 
@@ -80,6 +82,20 @@ if(!audienceStatus){
                 if (!player) {
                     throw new Error(`لا يوجد لاعب بالمعرف ${player_id}`);
                 }
+
+await reports_player.findOneAndUpdate(
+                        { user_id: player_id },
+                        {
+                            $set: {
+                                name: player.name,
+                                role: player.role
+                            },
+                            $inc: { 'attendance.present': 1 }
+                        },
+                        { upsert: true, setDefaultsOnInsert: true }
+                    );
+
+                
                 return {
                     user_id: player._id,
                     user_name: player.name,
@@ -166,72 +182,85 @@ const getAttendees = async (req, res) => {
 };
 
 
-const audience_for_coachs= async (req, res) => {
+const audience_for_coachs = async (req, res) => {
     try {
         const month_id = req.params.month_id;
         const day_id = req.params.day_id;
         const coach_ids = req.body.coach_ids;  
 
         if (!Array.isArray(coach_ids) || coach_ids.length === 0) {
-            return res.status(400).send("قائمة معرفات اللاعبين غير صالحة");
+            return res.status(400).send("قائمة معرفات المدربين غير صالحة");
         }
 
         const data_month = await Month.findById(month_id);
 
+        if (!data_month) {
+            return res.status(404).send('الشهر غير موجود');
+        }
 
-    if (!data_month) {
-      return res.status(404).send('الشهر غير موجود');
-    }
+        const day = data_month.days.find(day => day._id.toString() === day_id);
 
-  
-    const day = data_month.days.find(day => day._id.toString() === day_id);
+        if (!day) {
+            return res.status(404).send('اليوم غير موجود في الشهر');
+        }
 
+        const audienceStatus = day.audience_coach;
 
-    if (!day) {
-      return res.status(404).send('اليوم غير موجود في الشهر');
-    }
+        if (!audienceStatus) {
+            const coachsData = await Promise.all(
+                coach_ids.map(async (coach_id) => {
+                    const coach = await Coach.findById(coach_id);
+                    if (!coach) {
+                        throw new Error(`لا يوجد مدرب بالمعرف ${coach_id}`);
+                    }
+                    
+                   
+                    await reports_coach.findOneAndUpdate(
+                        { user_id: coach_id },
+                        {
+                            $set: {
+                                name: coach.name,
+                                role: coach.role
+                            },
+                            $inc: { 'attendance.present': 1 }
+                        },
+                        { upsert: true, setDefaultsOnInsert: true }
+                    );
 
-  
-    const audienceStatus = day.audience_coach
+                    return {
+                        user_id: coach._id,
+                        user_name: coach.name,
+                        role: coach.role
+                    };
+                })
+            );
 
-if(!audienceStatus){
-       
-        const coachsData = await Promise.all(
-            coach_ids.map(async (coach_id) => {
-                const coach = await Coach.findById(coach_id);
-                if (!coach) {
-                    throw new Error(`لا يوجد لاعب بالمعرف ${coach_id}`);
-                }
-                return {
-                    user_id: coach._id,
-                    user_name: coach.name,
-                    role: coach.role
-                };
-            })
-        );
-
-   
-        await Month.updateOne(
-            {
-                _id: month_id,
-                'days._id': day_id
-            },
-            {
-                $set: {
-                    'days.$.audience_coach': true
+            await Month.updateOne(
+                {
+                    _id: month_id,
+                    'days._id': day_id
                 },
-                $addToSet: {
-                    'days.$.attendees': { $each: coachsData }
+                {
+                    $set: {
+                        'days.$.audience_coach': true
+                    },
+                    $addToSet: {
+                        'days.$.attendees': { $each: coachsData }
+                    }
                 }
-            }
-        );
+            );
 
-        res.status(200).send({ message: 'تم تسجيل الحضور بنجاح' });
-}else{ res.status(400).send({ message: 'تم تسجيل الحضور فى وقت سابق' }) }
+            res.status(200).send({ message: 'تم تسجيل الحضور بنجاح' });
+        } else {
+            res.status(400).send({ message: 'تم تسجيل الحضور فى وقت سابق' });
+        }
     } catch (e) {
         res.status(500).send(e.message);
     }
 };
+
+module.exports = audience_for_coachs;
+
 
 
 
@@ -301,12 +330,39 @@ const deleteDayById = async (req,res ) => {
 
     
   } catch (err) {
-    console.error('حدث خطأ:', err.message);
+   res.status(500).send(err.message);
   }
 };
 
 
+const get_reports_player = async (req,res ) => {
+  try {
+      const player_id = req.params.player_id
+    
+  const data =  await reports_player.findById(player_id );
 
+   
+      res.status(200).send(data);
 
+    
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
+};
 
-module.exports={create_month ,create_day ,audience_for_players ,getAttendees,audience_for_coachs,delete_month,get_all_month,get_month,deleteDayById}
+const get_reports_coach = async (req,res ) => {
+  try {
+      const coach_id = req.params.coach_id
+    
+  const data =  await reports_coach.findById(coach_id );
+
+   
+      res.status(200).send(data);
+
+    
+  } catch (err) {
+res.status(500).send(err.message);
+  }
+};
+
+module.exports={create_month ,create_day ,audience_for_players ,getAttendees,audience_for_coachs,delete_month,get_all_month,get_month,deleteDayById,get_reports_player,get_reports_coach}
