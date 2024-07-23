@@ -65,6 +65,18 @@ var Coach = new mongoose.Schema({
             expiresIn:"10d"
         }
     ],
+
+  attendance: {
+        present: {
+            type: Number,
+            default: 0,
+        },
+        absent: {
+            type: Number,
+            default: 0,
+        },
+    }
+   
 });
 
 
