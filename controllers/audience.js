@@ -290,15 +290,14 @@ const deleteDayById = async (req,res ) => {
   try {
       const month_id = req.params.month_id
       const day_id = req.params.day_id;
-    const result = await Month.updateOne(
+    await Month.updateOne(
       { _id: month_id },
       { $pull: { days: { _id: day_id } } }
     );
 
-    if (result.nModified > 0) {
-      res.status(200).send(`تم حذف اليوم ذو المعرف ${day_id} من الشهر ذو المعرف ${month_id}.`);
-    } else {
-     return res.status(404).send(`لم يتم العثور على اليوم ذو المعرف ${day_id} في الشهر ذو المعرف ${month_id}.`);
+   
+      res.status(200).send(`.تم حذف اليوم.`);
+
     }
   } catch (err) {
     console.error('حدث خطأ:', err.message);
