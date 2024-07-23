@@ -68,10 +68,10 @@ const create_day = async (req, res) => {
     }
 
   
-    const audienceStatus = day.audience_player || false;
+    const audienceStatus = day.audience_player 
 
         
-if(audienceStatus){
+if(!audienceStatus){
 
         const playersData = await Promise.all(
             player_ids.map(async (player_id) => {
@@ -191,9 +191,9 @@ const audience_for_coachs= async (req, res) => {
     }
 
   
-    const audienceStatus = day.audience_player || false;
+    const audienceStatus = day.audience_coach
 
-if(audienceStatus){
+if(!audienceStatus){
        
         const coachsData = await Promise.all(
             coach_ids.map(async (coach_id) => {
