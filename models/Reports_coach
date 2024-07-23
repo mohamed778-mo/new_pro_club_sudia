@@ -1,0 +1,24 @@
+const mongoose = require('mongoose');
+
+var reports_coachSchema = new mongoose.Schema({
+    name: {
+        type: String,
+        required: true,
+    },
+    role: {
+        type: String,
+        required: true,
+    },
+    attendance: {
+        present: {
+            type: Number,
+            default: 0,
+        },
+        absent: {
+            type: Number,
+            default: 0,
+        },
+    }
+});
+
+const reports_coach = mongoose.model('reports_coach', reports_coachSchema);
