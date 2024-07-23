@@ -21,4 +21,4 @@ var reports_coachSchema = new mongoose.Schema({
     }
 });
 
-const reports_coach = mongoose.model('reports_coach', reports_coachSchema);
+module.exports = mongoose.model('reports_coach', reports_coachSchema);
