@@ -1,6 +1,10 @@
 const mongoose = require('mongoose');
 
 var reports_playerSchema = new mongoose.Schema({
+    player_id: {
+        type: String,
+        
+    },
     name: {
         type: String,
         required: true,
