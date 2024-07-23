@@ -38,7 +38,13 @@ var Player = new mongoose.Schema({
         type:String,
         enum:['player']
     },
-
+ doc_start:{
+        type:String,
+       
+    },
+   doc_end:{
+        type:String,
+    },
 });
 
 
