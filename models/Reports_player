@@ -22,4 +22,4 @@ var reports_playerSchema = new mongoose.Schema({
 });
 
 
-const  reports_player = mongoose.model('reports_player', reports_playerSchema);
+module.exports  = mongoose.model('reports_player', reports_playerSchema);
