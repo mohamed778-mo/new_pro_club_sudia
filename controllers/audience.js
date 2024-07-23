@@ -86,7 +86,7 @@ if(!audienceStatus){
                 }
 
 await reports_player.findOneAndUpdate(
-                        { user_id: player_id },
+                        { _id: player_id },
                         {
                             $set: {
                                 name: player.name,
@@ -127,7 +127,7 @@ await reports_player.findOneAndUpdate(
     await Promise.all(
                 not_selected_player_ids.map(async (player_id) => {
                     await reports_player.findOneAndUpdate(
-                        { user_id: player_id },
+                        { _id: player_id },
                         {
                             $inc: { 'attendance.absent': 1 },
                         },
@@ -233,7 +233,7 @@ const audience_for_coachs = async (req, res) => {
                     
                    
                     await reports_coach.findOneAndUpdate(
-                        { user_id: coach_id },
+                        { _id: coach_id },
                         {
                             $set: {
                                 name: coach.name,
@@ -273,7 +273,7 @@ const audience_for_coachs = async (req, res) => {
   await Promise.all(
                 not_selected_coach_ids.map(async (coach_id) => {
                     await reports_coach.findOneAndUpdate(
-                        { user_id: coach_id },
+                        { _id: coach_id },
                         {
                             $inc: { 'attendance.absent': 1 },
                         },
