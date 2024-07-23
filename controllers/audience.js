@@ -2,8 +2,8 @@ const Player = require("../models/player")
 const Coach = require("../models/coach")
 const Main_Admin = require("../models/Main_Admin")
 const Month = require("../models/month")
-const reports_player=require("../models/reports_player")
-const reports_coach=require("../models/reports_coach")
+const reports_player=require("../models/Reports_player")
+const reports_coach=require("../models/Reports_coach")
 
 const  mongoose  = require('mongoose')
 
