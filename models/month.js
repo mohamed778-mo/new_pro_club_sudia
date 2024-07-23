@@ -41,7 +41,7 @@ var monthSchema = new mongoose.Schema({
                 {
                     user_id: {
                         type: mongoose.Schema.Types.ObjectId,
-                        ref: 'Player'
+                        
                     },
                     user_name: {
                         type: String
