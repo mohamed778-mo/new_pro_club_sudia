@@ -116,7 +116,7 @@ const getAttendees = async (req, res) => {
         const day = month.days[0];
         const attendees = day.attendees || [];
 
-        res.status(200).send({ message: 'تم استرجاع بيانات الحضور', data: attendees });
+        res.status(200).send({ message: 'تم استرجاع بيانات الحضور', attendees_data: attendees , all_day_data:day});
     }else{res.status(400).send("لست ادمن")}
     } catch (e) {
         res.status(500).send(e.message);
