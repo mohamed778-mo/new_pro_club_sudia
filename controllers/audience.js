@@ -94,18 +94,24 @@ const create_day = async (req, res) => {
 
 const getAttendees = async (req, res) => {
     try {
-        const user = req.user
-        if(user.Admin){
+        const user = req.user;
+
+        // Check if the user is an admin
+        if (!user.Admin) {
+            return res.status(400).send("لست ادمن");
+        }
+
         const month_id = req.params.month_id;
         const day_id = req.params.day_id;
 
+        // Find the specific day within the specified month
         const month = await Month.findOne(
             {
                 _id: month_id,
                 'days._id': day_id
             },
             {
-                'days.$': 1  
+                'days.$': 1
             }
         );
 
@@ -116,12 +122,29 @@ const getAttendees = async (req, res) => {
         const day = month.days[0];
         const attendees = day.attendees || [];
 
-        res.status(200).send({ message: 'تم استرجاع بيانات الحضور', attendees_data: attendees , all_day_data:day});
-    }else{res.status(400).send("لست ادمن")}
+        
+        const totalPlayers = await Player.countDocuments()
+        const totalCoaches = await Coach.countDocuments()
+        const totalUsers = totalPlayers + totalCoaches
+
+        const numberOfAttendees = attendees.length
+        const attendancePercentage = (numberOfAttendees / totalUsers) * 100;
+
+        console.log(numberOfAttendees);
+        console.log(attendancePercentage);
+
+        res.status(200).send({
+            message: 'تم استرجاع بيانات الحضور',
+            number_of_attendees: numberOfAttendees,
+            attendees_data: attendees,
+            all_day_data: day,
+            attendance_percentage: attendancePercentage.toFixed(2) // Optional: rounding to 2 decimal places
+        });
     } catch (e) {
         res.status(500).send(e.message);
     }
 };
+
 
 const audience_for_coachs= async (req, res) => {
     try {
