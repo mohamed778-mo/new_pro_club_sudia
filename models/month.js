@@ -33,7 +33,11 @@ var monthSchema = new mongoose.Schema({
             role: {
                 type: String
             },
-            audience: {
+            audience_player: {
+                type: Boolean,
+                default: false
+            },
+            audience_coach: {
                 type: Boolean,
                 default: false
             },
