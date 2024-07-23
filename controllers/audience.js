@@ -85,7 +85,7 @@ if(!audienceStatus){
                     throw new Error(`لا يوجد لاعب بالمعرف ${player_id}`);
                 }
 
-await reports_player.findOneAndUpdate(
+             await reports_player.findOneAndUpdate(
                         { _id: player_id },
                         {
                             $set: {
@@ -105,7 +105,17 @@ await reports_player.findOneAndUpdate(
                 };
             })
         );
-
+            await Promise.all(
+                not_selected_player_ids.map(async (player_id) => {
+                    await reports_player.findOneAndUpdate(
+                        { _id: player_id },
+                        {
+                            $inc: { 'attendance.absent': 1 },
+                        },
+                        { upsert: true, setDefaultsOnInsert: true }
+                    );
+                })
+            );
       
         await Month.updateOne(
             {
@@ -124,19 +134,6 @@ await reports_player.findOneAndUpdate(
 
         res.status(200).send({ message: 'تم تسجيل الحضور بنجاح' });
 }else{ 
-    await Promise.all(
-                not_selected_player_ids.map(async (player_id) => {
-                    await reports_player.findOneAndUpdate(
-                        { _id: player_id },
-                        {
-                            $inc: { 'attendance.absent': 1 },
-                        },
-                        { upsert: true, setDefaultsOnInsert: true }
-                    );
-                })
-            );
-    
-    
     res.status(400).send({ message: 'تم تسجيل الحضور فى وقت سابق' });}
     } catch (e) {
         res.status(500).send(e.message);
@@ -251,7 +248,17 @@ const audience_for_coachs = async (req, res) => {
                     };
                 })
             );
-
+             await Promise.all(
+                not_selected_coach_ids.map(async (coach_id) => {
+                    await reports_coach.findOneAndUpdate(
+                        { _id: coach_id },
+                        {
+                            $inc: { 'attendance.absent': 1 },
+                        },
+                        { upsert: true, setDefaultsOnInsert: true }
+                    );
+                })
+            );
             await Month.updateOne(
                 {
                     _id: month_id,
@@ -270,17 +277,6 @@ const audience_for_coachs = async (req, res) => {
             res.status(200).send({ message: 'تم تسجيل الحضور بنجاح' });
         } else {
 
-  await Promise.all(
-                not_selected_coach_ids.map(async (coach_id) => {
-                    await reports_coach.findOneAndUpdate(
-                        { _id: coach_id },
-                        {
-                            $inc: { 'attendance.absent': 1 },
-                        },
-                        { upsert: true, setDefaultsOnInsert: true }
-                    );
-                })
-            );
             
             res.status(400).send({ message: 'تم تسجيل الحضور فى وقت سابق' });
         }
