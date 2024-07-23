@@ -53,7 +53,7 @@ const create_day = async (req, res) => {
             return res.status(400).send("قائمة معرفات اللاعبين غير صالحة");
         }
 
-         const check_audience = await Month.find({ 'days.audience': false });
+         const check_audience = await Month.find({ 'days.audience_player': false });
 if(check_audience){
 
         const playersData = await Promise.all(
@@ -78,7 +78,7 @@ if(check_audience){
             },
             {
                 $set: {
-                    'days.$.audience': true
+                    'days.$.audience_player': true
                 },
                 $addToSet: {
                     'days.$.attendees': { $each: playersData }
@@ -158,7 +158,7 @@ const audience_for_coachs= async (req, res) => {
             return res.status(400).send("قائمة معرفات اللاعبين غير صالحة");
         }
 
-         const check_audience = await Month.find({ 'days.audience': false });
+         const check_audience = await Month.find({ 'days.audience_coach': false });
 if(check_audience){
        
         const coachsData = await Promise.all(
@@ -183,7 +183,7 @@ if(check_audience){
             },
             {
                 $set: {
-                    'days.$.audience': true
+                    'days.$.audience_coach': true
                 },
                 $addToSet: {
                     'days.$.attendees': { $each: coachsData }
