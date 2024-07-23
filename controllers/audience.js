@@ -52,6 +52,8 @@ const create_day = async (req, res) => {
         const day_id = req.params.day_id;
         const player_ids = req.body.player_ids
 
+        const not_selected_player_ids = req.body.not_selected_player_ids
+
         if (!Array.isArray(player_ids) || player_ids.length === 0) {
             return res.status(400).send("قائمة معرفات اللاعبين غير صالحة");
         }
@@ -121,7 +123,21 @@ await reports_player.findOneAndUpdate(
         );
 
         res.status(200).send({ message: 'تم تسجيل الحضور بنجاح' });
-}else{ res.status(400).send({ message: 'تم تسجيل الحضور فى وقت سابق' });}
+}else{ 
+    await Promise.all(
+                not_selected_player_ids.map(async (player_id) => {
+                    await reports_player.findOneAndUpdate(
+                        { user_id: player_id },
+                        {
+                            $inc: { 'attendance.absent': 1 },
+                        },
+                        { upsert: true, setDefaultsOnInsert: true }
+                    );
+                })
+            );
+    
+    
+    res.status(400).send({ message: 'تم تسجيل الحضور فى وقت سابق' });}
     } catch (e) {
         res.status(500).send(e.message);
     }
@@ -187,7 +203,8 @@ const audience_for_coachs = async (req, res) => {
         const month_id = req.params.month_id;
         const day_id = req.params.day_id;
         const coach_ids = req.body.coach_ids;  
-
+        const not_selected_coach_ids = req.body.not_selected_coach_ids
+        
         if (!Array.isArray(coach_ids) || coach_ids.length === 0) {
             return res.status(400).send("قائمة معرفات المدربين غير صالحة");
         }
@@ -252,6 +269,19 @@ const audience_for_coachs = async (req, res) => {
 
             res.status(200).send({ message: 'تم تسجيل الحضور بنجاح' });
         } else {
+
+  await Promise.all(
+                not_selected_coach_ids.map(async (coach_id) => {
+                    await reports_coach.findOneAndUpdate(
+                        { user_id: coach_id },
+                        {
+                            $inc: { 'attendance.absent': 1 },
+                        },
+                        { upsert: true, setDefaultsOnInsert: true }
+                    );
+                })
+            );
+            
             res.status(400).send({ message: 'تم تسجيل الحضور فى وقت سابق' });
         }
     } catch (e) {
