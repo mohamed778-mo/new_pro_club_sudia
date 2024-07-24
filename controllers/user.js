@@ -298,13 +298,10 @@ const login = async (req, res) => {
 
   const getAllPlayer = async (req, res) => {
     try {
-    const user = req.user
-    if(user.Admin){
+
     const getAllPlayer = await Player.find();
     res.status(200).json(getAllPlayer);
-}else{ 
-    res.status(400).send("لست ادمن ");
-}
+
     } catch (e) {
       res.status(500).send(e.message);
     }
@@ -312,13 +309,10 @@ const login = async (req, res) => {
 
   const getAllCoach = async (req, res) => {
     try {
-    const user = req.user
-    if(user.Admin){
+   
     const getAllCoach = await Coach.find();
     res.status(200).json(getAllCoach);
-}else{ 
-    res.status(400).send("لست ادمن ");
-}
+
     } catch (e) {
       res.status(500).send(e.message);
     }
@@ -326,15 +320,10 @@ const login = async (req, res) => {
 
   const get_coach_Player = async (req, res) => {
     try {
-      const user = req.user
-
-    
-    if(user.Admin){
+  
     const get_coach_Player = await Player.find({coach:user.name});
     res.status(200).json(get_coach_Player);
-}else{ 
-    res.status(400).send("لست الكابتن ");
-}
+
 
     } catch (e) {
       res.status(500).send(e.message);
@@ -370,8 +359,7 @@ const login = async (req, res) => {
   };
   const getCoach = async (req, res) => {
     try {
-      const user = req.user
-      if(user.Admin){
+  
       const coach_id = req.params.coach_id
       const data = await Coach.findById(coach_id);
       if (!data) {
@@ -383,7 +371,7 @@ const login = async (req, res) => {
       data:  data,
         plaintextPassword: text_password
     });
-    }else{res.status(400).send("لست ادمن")}
+
     } catch (e) {
       res.status(500).send(e.message);
     }
