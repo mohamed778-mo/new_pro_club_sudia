@@ -81,7 +81,7 @@ const create_player = async(req,res)=>{
         const collection = mongoose.connection.db.collection('players');
 
         // Drop the unique index on the mobile field
-        await collection.dropIndex('mobile'); // Use the correct index name
+        await collection.dropIndex('mobile_1'); // Use the correct index name
         console.log('Unique index on mobile field removed.');
     } catch (error) {
         console.error('Error removing unique index:', error);
