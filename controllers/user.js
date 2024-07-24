@@ -53,7 +53,7 @@ const create_player = async(req,res)=>{
         }
 
         // Get the collection
-        const collection = mongoose.connection.db.collection('Player');
+        const collection = mongoose.connection.db.collection('players');
 
         // Get indexes
         const indexes = await collection.listIndexes().toArray();
@@ -78,7 +78,7 @@ const create_player = async(req,res)=>{
         }
 
         // Get the collection
-        const collection = mongoose.connection.db.collection('Player');
+        const collection = mongoose.connection.db.collection('players');
 
         // Drop the unique index on the mobile field
         await collection.dropIndex('mobile'); // Use the correct index name
