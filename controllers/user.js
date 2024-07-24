@@ -42,7 +42,7 @@ const create_player = async(req,res)=>{
       
         const file = req.files.find(f => f.fieldname === 'file')
         
-       
+       console.log(Player.getIndexes())
 
         if(file){
         
