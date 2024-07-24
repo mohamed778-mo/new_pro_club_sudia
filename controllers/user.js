@@ -43,55 +43,6 @@ const create_player = async(req,res)=>{
         const file = req.files.find(f => f.fieldname === 'file')
     
 
-    try {
-        // Connect to MongoDB if not already connected
-        if (!mongoose.connection.readyState) {
-            await mongoose.connect(process.env.ATLAS_URL, {
-                useNewUrlParser: true,
-                useUnifiedTopology: true
-            });
-        }
-
-        // Get the collection
-        const collection = mongoose.connection.db.collection('players');
-
-        // Get indexes
-        const indexes = await collection.listIndexes().toArray();
-        console.log(indexes);
-    } catch (error) {
-        console.error('Error fetching indexes:', error);
-    } finally {
-        // Close the connection
-        mongoose.connection.close();
-    }
-
-
-
-
-    try {
-        // Connect to MongoDB if not already connected
-        if (!mongoose.connection.readyState) {
-            await mongoose.connect(process.env.ATLAS_URL, {
-                useNewUrlParser: true,
-                useUnifiedTopology: true
-            });
-        }
-
-        // Get the collection
-        const collection = mongoose.connection.db.collection('players');
-
-        // Drop the unique index on the mobile field
-        await collection.dropIndex('mobile_1'); // Use the correct index name
-        console.log('Unique index on mobile field removed.');
-    } catch (error) {
-        console.error('Error removing unique index:', error);
-    } finally {
-        // Close the connection
-        mongoose.connection.close();
-    }
-
-
-
 
         if(file){
         
