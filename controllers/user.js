@@ -42,12 +42,7 @@ const create_player = async(req,res)=>{
       
         const file = req.files.find(f => f.fieldname === 'file')
         
-        if(req.body.mobile ){
-        const dublicatedMobile = await Player.findOne({ mobile: mobile });
-        if (dublicatedMobile) {
-          return res.status(400).send("Mobile already exist!!");
-        }
-}
+       
 
         if(file){
         
