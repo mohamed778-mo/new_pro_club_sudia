@@ -286,9 +286,7 @@ module.exports = audience_for_coachs;
 
 const delete_month =async(req,res)=>{
     try{
-    
-   const user = req.user
-        if(user.Admin){
+       
      const month_id = req.params.month_id
       if (!mongoose.Types.ObjectId.isValid(month_id)) {
         return res.status(404).send("ID is not correct!!");
@@ -297,22 +295,21 @@ const delete_month =async(req,res)=>{
     if(!data){res.status(404).send("هذا الشهر غير موجود")}
      await Month.findByIdAndDelete(month_id);
     res.status(200).send(' تم حذف هذا الشهر بنجاح')
-}else{return res.status(404).send('لست ادمن')}
+
     }catch(e){res.status(500).send(e.message)}
 }
 
 const get_all_month =async(req,res)=>{
     try{
     
-   const user = req.user
-        if(user.Admin){
+ 
 
      
     const data = await Month.find()
     if(!data){res.status(404).send("لا يوجد شهور")}
     
     res.status(200).send(data)
-}else{return res.status(404).send('لست ادمن')}
+
     }catch(e){res.status(500).send(e.message)}
 }
 
@@ -320,8 +317,7 @@ const get_all_month =async(req,res)=>{
 const get_month =async(req,res)=>{
     try{
     
-   const user = req.user
-        if(user.Admin){
+
 const month_id = req.params.month_id
       if (!mongoose.Types.ObjectId.isValid(month_id)) {
         return res.status(404).send("ID is not correct!!");
@@ -330,7 +326,7 @@ const month_id = req.params.month_id
     if(!data){res.status(404).send("هذا الشهر غير موجود")}
     
     res.status(200).send(data)
-}else{return res.status(404).send('لست ادمن')}
+
     }catch(e){res.status(500).send(e.message)}
 }
 
