@@ -197,6 +197,7 @@ const audience_for_coachs = async (req, res) => {
         const month_id = req.params.month_id;
         const day_id = req.params.day_id;
         const coach_ids = req.body.coach_ids;  
+        
         const not_selected_coach_ids = req.body.not_selected_coach_ids
         
         if (!Array.isArray(coach_ids) || coach_ids.length === 0) {
