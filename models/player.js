@@ -29,7 +29,7 @@ var Player = new mongoose.Schema({
     },
     category:{
         type:String,
-        required:true,
+     
     },
     card_Number:{
         type:String,
