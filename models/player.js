@@ -16,6 +16,7 @@ var Player = new mongoose.Schema({
     mobile:{
         type:String,
         required:true,
+       unique:false
         
     },
     dateOfBirth:{
