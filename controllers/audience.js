@@ -448,9 +448,9 @@ if(re){
                     }
                 });
 
-                res.status(200).send("تم تصفير الحضور والغياب بنجاح");
+               return res.status(200).send("تم تصفير الحضور والغياب بنجاح");
                 
-            }else{res.status(400).send("الشهر لم ينتهى بعد");}
+            }else{return res.status(400).send("الشهر لم ينتهى بعد");}
         
     
        
