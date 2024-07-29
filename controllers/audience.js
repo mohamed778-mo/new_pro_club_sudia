@@ -46,64 +46,58 @@ const create_day = async (req, res) => {
   
 
 
-  const audience_for_players = async (req, res) => {
+    const audience_for_players = async (req, res) => {
     try {
         const month_id = req.params.month_id;
         const day_id = req.params.day_id;
-        const player_ids = req.body.player_ids
-
-        const not_selected_player_ids = req.body.not_selected_player_ids
+        const player_ids = req.body.player_ids;
+        const not_selected_player_ids = req.body.not_selected_player_ids;
 
         if (!Array.isArray(player_ids) || player_ids.length === 0) {
             return res.status(400).send("قائمة معرفات اللاعبين غير صالحة");
         }
-         const data_month = await Month.findById(month_id);
 
+        const data_month = await Month.findById(month_id);
 
-    if (!data_month) {
-      return res.status(404).send('الشهر غير موجود');
-    }
+        if (!data_month) {
+            return res.status(404).send('الشهر غير موجود');
+        }
 
-  
-    const day = data_month.days.find(day => day._id.toString() === day_id);
+        const day = data_month.days.find(day => day._id.toString() === day_id);
 
+        if (!day) {
+            return res.status(404).send('اليوم غير موجود في الشهر');
+        }
 
-    if (!day) {
-      return res.status(404).send('اليوم غير موجود في الشهر');
-    }
+        const audienceStatus = day.audience_player;
 
-  
-    const audienceStatus = day.audience_player 
+        if (!audienceStatus) {
+            const playersData = await Promise.all(
+                player_ids.map(async (player_id) => {
+                    const player = await Player.findById(player_id);
+                    if (!player) {
+                        throw new Error(`لا يوجد لاعب بهذا ال id`);
+                    }
 
-        
-if(!audienceStatus){
-
-        const playersData = await Promise.all(
-            player_ids.map(async (player_id) => {
-                const player = await Player.findById(player_id);
-                if (!player) {
-                    throw new Error(`لا يوجد لاعب بالمعرف ${player_id}`);
-                }
-
-             await Player.findOneAndUpdate(
+                    await Player.findOneAndUpdate(
                         { _id: player_id },
                         {
-                           
                             $inc: { 'attendance.present': 1 }
                         },
                         { upsert: true, setDefaultsOnInsert: true }
                     );
-           
-                
-                return {
-                    user_id: player._id,
-                    user_name: player.name,
-                    role: player.role
-                };
-            })
-        );
-           
-       await Promise.all(
+
+                    return {
+                        user_id: player._id,
+                        user_name: player.name,
+                        role: player.role,
+                        present: 1,
+                        absent: 0
+                    };
+                })
+            );
+
+            const notSelectedPlayersData = await Promise.all(
                 not_selected_player_ids.map(async (player_id) => {
                     await Player.findOneAndUpdate(
                         { _id: player_id },
@@ -112,26 +106,38 @@ if(!audienceStatus){
                         },
                         { upsert: true, setDefaultsOnInsert: true }
                     );
+
+                    const player = await Player.findById(player_id);
+                    return {
+                        user_id: player._id,
+                        user_name: player.name,
+                        role: player.role,
+                        present: 0,
+                        absent: 1
+                    };
                 })
             );
-        await Month.updateOne(
-            {
-                _id: month_id,
-                'days._id': day_id
-            },
-            {
-                $set: {
-                    'days.$.audience_player': true
-                },
-                $addToSet: {
-                    'days.$.attendees': { $each: playersData }
-                }
-            }
-        );
 
-        res.status(200).send({ message: 'تم تسجيل الحضور بنجاح' });
-}else{ 
-    res.status(400).send({ message: 'تم تسجيل الحضور فى وقت سابق' });}
+            day.present += player_ids.length;
+            day.absent += not_selected_player_ids.length;
+            day.attendees.push(...playersData, ...notSelectedPlayersData);
+
+            await Month.updateOne(
+                { _id: month_id, 'days._id': day_id },
+                {
+                    $set: {
+                        'days.$.audience_player': true,
+                        'days.$.present': day.present,
+                        'days.$.absent': day.absent,
+                        
+                    }
+                }
+            );
+            await data_month.save();
+            res.status(200).send({ message: 'تم تسجيل الحضور بنجاح' });
+        } else {
+            res.status(400).send({ message: 'تم تسجيل الحضور فى وقت سابق' });
+        }
     } catch (e) {
         res.status(500).send(e.message);
     }
@@ -381,4 +387,102 @@ res.status(500).send(err.message);
   }
 };
 
-module.exports={create_month ,create_day ,audience_for_players ,getAttendees,audience_for_coachs,delete_month,get_all_month,get_month,deleteDayById,get_reports_player,get_reports_coach}
+
+const resetAttendance = async (req, res) => {
+    try {
+        const month_id = req.params.month_id
+        const data_month = await Month.findById(month_id);
+        const date_now = new Date();
+        
+        const end_month = new Date(data_month.end);
+        const re = await AttendanceRecord.findOne({month:data_month.month})
+if(re){
+    return res.status(404).send("تم تصفير الغياب والحضور لهذا الشهر من قبل !")
+}
+            if (end_month.getFullYear() <= date_now.getFullYear() && 
+                end_month.getMonth() <= date_now.getMonth() && 
+                end_month.getDate() <= date_now.getDate()) {
+
+                const playersAttendance = [];
+
+                data_month.days.forEach(day => {
+                    day.attendees.forEach(attendee => {
+                        const player = playersAttendance.find(p => p.user_id.toString() === attendee.user_id.toString());
+                        
+                        if (player) {
+                            player.present += attendee.present;
+                            player.absent += attendee.absent;
+                        } else {
+                            playersAttendance.push({
+                                user_id: attendee.user_id,
+                                user_name: attendee.user_name,
+                                role: attendee.role,
+                                present: attendee.present,
+                                absent: attendee.absent
+                            });
+                        }
+                    });
+                });
+
+                const new_save_month = new AttendanceRecord({
+                    month: data_month.month,
+                    players: playersAttendance
+                });
+
+                await new_save_month.save();
+
+                data_month.days.forEach(day => {
+                    day.attendees.forEach(attendee => {
+                        attendee.present = 0;
+                        attendee.absent = 0;
+                    });
+                });
+
+                await data_month.save();
+
+               
+                await Player.updateMany({}, {
+                    $set: {
+                        'attendance.present': 0,
+                        'attendance.absent': 0
+                    }
+                });
+
+                res.status(200).send("تم تصفير الحضور والغياب بنجاح");
+                
+            }else{res.status(400).send("الشهر لم ينتهى بعد");}
+        
+    
+       
+    } catch (e) {
+        res.status(500).send(e.message);
+    }
+};
+
+
+
+const get_old_months = async (req, res) => {
+    try {
+        const data = await AttendanceRecord.find();
+        res.status(200).send(data);
+    } catch (e) {
+        res.status(500).send(e.message);
+    }
+};
+
+const delete_old_month = async (req, res) => {
+    try {
+        const old_month_id =req.params.old_month_id
+        const data = await AttendanceRecord.findByIdAndDelete(old_month_id);
+        if(!data){
+          return  res.status(400).send('يوجد خطا فى عملية المسح');  
+        }
+        res.status(200).send("تم المسح بنجاح");
+    } catch (e) {
+        res.status(500).send(e.message);
+    }
+};
+
+
+
+module.exports={create_month ,create_day ,audience_for_players ,getAttendees,audience_for_coachs,delete_month,get_all_month,get_month,deleteDayById,get_reports_player,get_reports_coach,resetAttendance,get_old_months,delete_old_month}
