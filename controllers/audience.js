@@ -4,7 +4,7 @@ const Main_Admin = require("../models/Main_Admin")
 const Month = require("../models/month")
 const reports_player=require("../models/Reports_player")
 const reports_coach=require("../models/Reports_coach")
-
+const AttendanceRecord = require('../models/audience_every_month')
 const  mongoose  = require('mongoose')
 
 const create_month =async(req,res)=>{
