@@ -1,5 +1,4 @@
-const mongoose = require('mongoose'); // Erase if already required
-
+const mongoose = require('mongoose');
 
 var Player = new mongoose.Schema({
    picture:{
