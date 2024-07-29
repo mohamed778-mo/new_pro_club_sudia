@@ -24,15 +24,6 @@ var monthSchema = new mongoose.Schema({
             date: {
                 type: String
             },
-            user_id: {
-                type: mongoose.Schema.Types.ObjectId,
-            },
-            user_name: {
-                type: String
-            },
-            role: {
-                type: String
-            },
             audience_player: {
                 type: Boolean,
                 default: false
@@ -41,20 +32,35 @@ var monthSchema = new mongoose.Schema({
                 type: Boolean,
                 default: false
             },
+            present: {
+                type: Number,
+                default: 0,
+            },
+            absent: {
+                type: Number,
+                default: 0,
+            },
             attendees: [
                 {
                     user_id: {
                         type: mongoose.Schema.Types.ObjectId,
-                        
                     },
                     user_name: {
                         type: String
                     },
                     role: {
                         type: String
-                    }
+                    },
+                    present: {
+                        type: Number,
+                        default: 0,
+                    },
+                    absent: {
+                        type: Number,
+                        default: 0,
+                    },
                 }
-            ]
+            ],
         }
     ],
 });
