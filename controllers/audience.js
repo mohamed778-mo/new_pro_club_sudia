@@ -437,7 +437,7 @@ if(re){
                         attendee.absent = 0;
                     });
                 });
-              await Month.findByIdAndUpdate(month_id,{finish:true},{new:true}).then((s)=>{s.save()})
+              data_month.finish=true;
                 
                 await data_month.save();
 
