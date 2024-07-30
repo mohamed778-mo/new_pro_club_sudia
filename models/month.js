@@ -16,6 +16,11 @@ var monthSchema = new mongoose.Schema({
     note: {
         type: String,
     },
+     finish: {
+        type: Boolean,
+         default:false
+    }
+    ,
     days: [
         {
             day: {
