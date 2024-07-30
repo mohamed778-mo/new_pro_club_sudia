@@ -10,6 +10,10 @@ const  mongoose  = require('mongoose')
 const create_month =async(req,res)=>{
     try{
     const {month , start, end, note}=req.body
+        const ifdata = await Month.findOne({month:month})
+        if(ifdata){
+            return res.status(400).send("اسم الشهر موجود بالفعل")
+        }
     const new_month = new Month({month , start, end, note})
    await new_month.save()
     res.status(200).send(new_month)
